@@ -1,0 +1,4 @@
+{
+  "mongoLocalURI" : "mongodb://localhost:27017/techtalk-db",
+  "sessionSecretLocal" : "local development"
+}
