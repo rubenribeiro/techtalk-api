@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const app = express();
 const port = process.env.PORT || 4000;
-const mongoose = require('mongoose');
 const session = require('express-session');
 const config = require('config');
 const connectDB = require('./config/db');
@@ -11,6 +10,9 @@ const connectDB = require('./config/db');
 
 const SESSION_SECRET_LOCAL = config.get('sessionSecretLocal');
 const SESSION_SECRET = process.env.SESSION_SECRET || SESSION_SECRET_LOCAL;
+
+//CORS
+const exclusionList = ['http://localhost:3000']
 
 // session setup
 app.use(session({
@@ -20,13 +22,12 @@ app.use(session({
     //cookie: { secure: true }
 }));
 
-
 // Db Setup
 connectDB();
 
 // Configure CORS
 app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Origin', exclusionList);
     res.header('Access-Control-Allow-Headers',
         'Content-Type, X-Requested-With, Origin');
     res.header('Access-Control-Allow-Methods',

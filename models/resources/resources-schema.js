@@ -4,7 +4,6 @@ const resourceSchema = mongoose.Schema(
         _id: {
             type: String,
             trim: true,
-            required: true
         },
         type: {
             type: String,
@@ -22,18 +21,15 @@ const resourceSchema = mongoose.Schema(
             type: Boolean,
             default: true
         },
-        link: {
-            type: String,
-            trim: true,
-            required: true
-        },
-        votersList: [{
-                type: mongoose.Schema.types.ObjectId,
-                ref: 'users'
+        upVotersList: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'users',
+                default: []
         }],
-        comments: [{
-            type: mongoose.Schema.types.ObjectId,
-            ref: 'Comment'
+        dowVotersList: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'users',
+            default: []
         }],
     },
     {

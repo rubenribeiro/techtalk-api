@@ -1,16 +1,22 @@
 const usersModel = require("../models/users/users-model");
 
-const findUserByUsername = (email) => {
-    return usersModel.find({email});
+const findAllUsers = () => {
+    return usersModel.find();
+}
+
+const findUserByUsername = (username) => {
+    return usersModel.findOne({username});
 }
 
 const createUser = (user) => {
-    return usersModel.create({user});
+    console.log("CREATE USER \n");
+    console.log(JSON.stringify(user));
+    return usersModel.create(user);
 };
 
 const findUserByCredentials = (credentials) => {
     return usersModel.findOne({
-        username: credentials.email,
+        username: credentials.username,
         password: credentials.password
     })
 }
@@ -18,5 +24,6 @@ const findUserByCredentials = (credentials) => {
 module.exports = {
     findUserByUsername,
     createUser,
-    findUserByCredentials
+    findUserByCredentials,
+    findAllUsers,
 }

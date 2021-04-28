@@ -1,5 +1,5 @@
-//const resourcesModel = require('../../models/resources/resources-model');
 const axios = require('axios');
+const resourcesDao = require('../../daos/resources-dao');
 
 const BOOKS_URL = 'https://www.googleapis.com/books/v1/volumes';
 
@@ -20,7 +20,15 @@ const findBookById = (bookId) => {
         });
 }
 
+const createResource = (resource) =>
+    resourcesDao.createResource(resource);
+
+const findResourceById = (rid) =>
+    resourcesDao.findResourceById(rid);
+
 module.exports = {
     findBooksBySearchTerm,
     findBookById,
+    createResource,
+    findResourceById,
 }

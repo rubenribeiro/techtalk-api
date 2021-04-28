@@ -1,9 +1,13 @@
 const resourceService = require("../services/resources/resources-service");
 
 module.exports = (app) => {
-
     const createResource = (req, res) => {
-        res.send("create Resource");
+        const resource = req.body;
+        console.log(JSON.stringify(resource));
+        resourceService.createResource(resource)
+            .then((actualResource) => {
+                res.send(actualResource);
+            })
     }
 
     const findAllResources = (req, res) => {
@@ -11,7 +15,16 @@ module.exports = (app) => {
     };
 
     const findResourceById = (req, res) => {
-        res.send("Return Resource By ID");
+        const rid = req.body;
+        resourceService.findResourceById(credentials)
+            .then((actualUser) => {
+                if(actualUser) {
+                    req.session['profile'] = actualUser
+                    res.send(actualUser)
+                } else {
+                    res.send("0")
+                }
+            })
     };
 
     const updateResource = (req, res) => {
@@ -24,31 +37,43 @@ module.exports = (app) => {
 
     const searchResources = (req, res) => {
         const searchTerm = req.params.term;
-            resourceService.findBooksBySearchTerm(searchTerm)
-                .then ( books => {
-                    res.send(books);
-                });
+
+        resourceService.findBooksBySearchTerm(searchTerm)
+            .then ( books => {
+                res.send(books);
+        });
     }
 
     const searchResourceById = (req, res) => {
-        const bookId = req.params.id;
-            resourceService.findBookById(bookId)
-                .then ( book => {
-                    res.send(book);
-                });
+        const resourceId = req.params['id'];
+            resourceService.findResourceById(resourceId)
+                .then( resource => {
+                    res.send(resource);
+                })
     }
 
-    app.post('/api/resources/', createResource);
+    const findBookById = (req, res) => {
+        const bookId = req.params['id'];
+        resourceService.findBookById(bookId)
+            .then( book => {
+                res.send(book);
+            })
+    }
 
+    const resourceUpVote = (req, res) => {
+        res.send("Up Vote Resource");
+    }
+    const resourceDownVote = (req, res) => {
+        res.send("Down Vote Resource");
+    }
+
+    app.post('/api/resources', createResource);
     app.get('/api/resources', findAllResources);
-
     app.get('/api/resources/:id', findResourceById);
-
     app.put('/api/resources/:id', updateResource);
-
     app.delete('/api/resources/:id', deleteResource);
-
     app.get('/api/resources/search/:term', searchResources);
-
-    app.get('/api/resources/search/detail/:id', searchResourceById)
+    app.get('/api/resources/search/detail/:id', findBookById);
+    app.post('/api/resources/:id/upvote', resourceUpVote);
+    app.post('/api/resources/:id/downvote', resourceDownVote);
 }
