@@ -4,8 +4,9 @@ const morgan = require('morgan');
 const app = express();
 const port = process.env.PORT || 4000;
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const config = require('config');
-const connectDB = require('./config/db');
+const {connectDB, mongoDb } = require('./config/db');
 
 
 const SESSION_SECRET_LOCAL = config.get('sessionSecretLocal');
@@ -19,7 +20,8 @@ app.use(session({
     secret: `${SESSION_SECRET}`,
     resave: false,
     saveUninitialized: true,
-    //cookie: { secure: true }
+    cookie: { secure: false },
+    store: MongoStore.create({ mongoUrl: mongoDb })
 }));
 
 // Db Setup

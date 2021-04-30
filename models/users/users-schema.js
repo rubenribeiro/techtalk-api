@@ -35,14 +35,27 @@ const usersSchema = mongoose.Schema(
             enum: ['ADMIN', 'USER'],
             default: 'USER',
         },
+        occupation: {
+            type: String,
+            default: "Unknown",
+        },
+        intro: {
+            type: String,
+            default: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
+        },
+        favorites: {
+            type: [String],
+            default: []
+        },
         date: {
             type: Date,
             default: Date.now
         },
     },
     {
-        collection: "users"
-    }
+        collection: "users",
+        timestamps: true
+    },
 )
 //TODO: Encrypt Password
 module.exports = usersSchema;

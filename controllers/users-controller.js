@@ -4,11 +4,9 @@ module.exports = (app) => {
 
     const register = (req, res) => {
         const credentials = req.body;
-        console.log(JSON.stringify(credentials));
         userDao.findUserByUsername(credentials.username)
             .then((actualUser) => {
                 if(actualUser && actualUser.length && actualUser.length > 0) {
-                    console.log(JSON.stringify(actualUser));
                     res.send("0");
                 } else {
                     userDao.createUser(credentials)
@@ -25,7 +23,7 @@ module.exports = (app) => {
         userDao.findUserByCredentials(credentials)
             .then((actualUser) => {
                 if(actualUser) {
-                    req.session['profile'] = actualUser
+                    req.session['profile'] = actualUser;
                     res.send(actualUser)
                 } else {
                     res.send("0")
@@ -50,18 +48,73 @@ module.exports = (app) => {
     const profile = (req, res) => {
         const currentUser = req.session['profile'];
         res.send(currentUser);
+
     }
 
     const findAllUsers = (req, res) => {
         userDao.findAllUsers()
             .then((users) => {
+                console.log(users);
                 res.send(users);
             });
     };
+
+    const findUserById = (req, res) => {
+        const userId = req.params["id"];
+        userDao.findUserById(userId)
+            .then((user) => {
+                res.send(user);
+            });
+    };
+
+    const updateUser = (req, res) => {
+        const userToUpdate = req.body;
+        userDao.updateUser(userToUpdate)
+            .then((user) => {
+                req.session['profile'] = user;
+                res.send(user);
+            })
+    }
+
+    const updateUserById = (req, res) => {
+        const userToUpdate = req.body;
+        userDao.updateUser(userToUpdate)
+            .then((user) => {
+                res.send(user);
+            })
+    }
+
+    const deleteUser = (req, res) => {
+        const userId = req.params['id'];
+        userDao.deleteUser(userId)
+            .then((user) => {
+                res.send(user);
+            })
+    }
+
+    const addUser = (req, res) => {
+        const credentials = req.body;
+        userDao.findUserByUsername(credentials.username)
+            .then((actualUser) => {
+                if(actualUser && actualUser.length && actualUser.length > 0) {
+                    res.send("0");
+                } else {
+                    userDao.createUser(credentials)
+                        .then((newUser) => {
+                            res.send(newUser);
+                        })
+                }
+            })
+    }
 
     app.post("/api/users", findAllUsers);
     app.post('/api/users/register', register);
     app.post('/api/users/login', login);
     app.post("/api/users/logout", logout)
     app.post('/api/users/profile', profile);
+    app.post('/api/users/profile/new', addUser);
+    app.put('/api/users/profile', updateUser);
+    app.delete('/api/users/profile/:id', deleteUser);
+    app.post('/api/users/profile/:id', findUserById);
+    app.put('/api/users/profile/:id', updateUserById);
 }

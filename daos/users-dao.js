@@ -9,8 +9,6 @@ const findUserByUsername = (username) => {
 }
 
 const createUser = (user) => {
-    console.log("CREATE USER \n");
-    console.log(JSON.stringify(user));
     return usersModel.create(user);
 };
 
@@ -21,9 +19,25 @@ const findUserByCredentials = (credentials) => {
     })
 }
 
+const findUserById = (userId) => {
+    return usersModel.findByIdAndDelete(userId);
+}
+
+
+const updateUser = (user) => {
+    return usersModel.findByIdAndUpdate(user._id, {$set:user}, {new: true});
+}
+
+const deleteUser = (userId) => {
+    return usersModel.findOneAndDelete(userId);
+};
+
 module.exports = {
     findUserByUsername,
     createUser,
     findUserByCredentials,
     findAllUsers,
+    findUserById,
+    updateUser,
+    deleteUser,
 }
